@@ -18,17 +18,19 @@ import "./components/Note.css";
 import "./components/DiaryEntry.css";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("access_token")
+  );
   const [loading, setLoading] = useState(true);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    setIsLoggedIn(false); // Cập nhật trạng thái đăng nhập
+    setIsLoggedIn(false);
     toast.success("Đăng xuất thành công!", {
       autoClose: 3000,
       onClose: () => {
-        window.location.href = "/login"; // Điều hướng về login ngay lập tức
+        window.location.href = "/login";
       },
     });
   };
@@ -36,21 +38,21 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
-      axios
-        .get("http://127.0.0.1:8000/api/verify-token/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
+      const verifyToken = async () => {
+        try {
+          await axios.get("http://127.0.0.1:8000/api/verify-token/", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setIsLoggedIn(true);
-        })
-        .catch(() => {
-          handleLogout();
-        })
-        .finally(() => {
+        } catch (error) {
+          console.error("Token verification failed:", error);
+        } finally {
           setLoading(false);
-        });
+        }
+      };
+      verifyToken();
     } else {
       setLoading(false);
     }
@@ -66,7 +68,6 @@ const App = () => {
         <ToastContainer />
         <div style={{ display: "flex", height: "100vh" }}>
           {isLoggedIn && <SideBar />}
-
           <div style={{ marginLeft: isLoggedIn ? "var(--navbar-width)" : "0", padding: "20px", flex: 1 }}>
             <Routes>
               <Route
@@ -111,9 +112,7 @@ const App = () => {
               />
               <Route
                 path="/"
-                element={
-                  isLoggedIn ? <Navigate to="/setting" /> : <Navigate to="/login" />
-                }
+                element={isLoggedIn ? <Navigate to="/task" /> : <Navigate to="/login" />}
               />
             </Routes>
           </div>

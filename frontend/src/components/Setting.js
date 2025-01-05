@@ -23,7 +23,7 @@ const Setting = () => {
     setEmail("");
     setAvatar(null);
     toast.success("Đăng xuất thành công!", {
-      autoClose: 3000,
+      autoClose: 1000,
       onClose: () => {
         window.location.href = "/login"; // Điều hướng trực tiếp thay vì sử dụng navigate
       },
@@ -76,7 +76,7 @@ const Setting = () => {
     }
   };
 
-  // Xử lý thay đổi mật khẩu
+
   const handleChangePassword = async () => {
     setPasswordError("");
     if (newPassword !== confirmPassword) {

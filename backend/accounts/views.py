@@ -103,7 +103,7 @@ class ChangePasswordView(APIView):
         new_password = data.get("new_password")
         confirm_password = data.get("confirm_password")
         
-        #* Authorize old password
+        #* Authorize old password to check out if it correct or not
         if not authenticate(username=user.username, password=old_password):
             return Response({"error": "Old password is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
         

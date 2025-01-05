@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import axios from "axios";
 import "./DiaryEntry.css";
 
 const DiaryEntry = () => {
@@ -7,57 +8,101 @@ const DiaryEntry = () => {
   const [date, setDate] = useState("");
   const [entries, setEntries] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
-  const today = new Date().toISOString().split("T")[0]; // Lấy ngày hôm nay ở định dạng yyyy-mm-dd
+  const today = new Date().toISOString().split("T")[0];
+  const baseURL = "http://127.0.0.1:8000/api/diary/";
 
-  // Kiểm tra nếu ngày nhập vào là trong tương lai
-  const isDateInFuture = (inputDate) => {
-    return new Date(inputDate) > new Date();
-  };
+  // Lấy danh sách nhật ký từ backend
+  useEffect(() => {
+    axios
+      .get(baseURL, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        setEntries(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch diary entries", error);
+        alert("Could not fetch diary entries. Please try again.");
+      });
+  }, []);
 
-  // Thêm hoặc chỉnh sửa nhật ký
   const handleAddOrEditEntry = () => {
     if (entry && date) {
-      if (isDateInFuture(date)) {
-        alert("Ngày không được là ngày trong tương lai! Vui lòng chọn ngày hợp lệ.");
+      if (new Date(date) > new Date()) {
+        alert("Ngày không được là ngày trong tương lai!");
         return;
       }
 
+      const diaryEntry = { date, content: entry };
       if (editingIndex !== null) {
-        // Nếu đang ở chế độ chỉnh sửa, cập nhật mục nhật ký
-        const updatedEntries = [...entries];
-        updatedEntries[editingIndex] = { date: date, content: entry };
-        setEntries(updatedEntries);
-        setEditingIndex(null); // Reset chỉ mục sau khi lưu
+        // Cập nhật nhật ký
+        const entryId = entries[editingIndex].id;
+        axios
+          .put(`${baseURL}${entryId}/`, diaryEntry, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          })
+          .then((response) => {
+            const updatedEntries = [...entries];
+            updatedEntries[editingIndex] = response.data;
+            setEntries(updatedEntries);
+            resetForm();
+          })
+          .catch((error) => {
+            console.error("Failed to update diary entry", error);
+            alert("Failed to update diary entry.");
+          });
       } else {
-        // Thêm mới mục nhật ký
-        const newEntries = [
-          { date: date, content: entry },
-          ...entries,
-        ].sort((a, b) => new Date(b.date) - new Date(a.date));
-        setEntries(newEntries);
+        // Thêm nhật ký mới
+        axios
+          .post(baseURL, diaryEntry, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          })
+          .then((response) => {
+            setEntries([response.data, ...entries]);
+            resetForm();
+          })
+          .catch((error) => {
+            console.error("Failed to add diary entry", error);
+            alert("Failed to add diary entry.");
+          });
       }
-      setEntry("");
-      setDate(""); // Reset sau khi thêm hoặc chỉnh sửa
     } else {
       alert("Vui lòng nhập đầy đủ nội dung và ngày!");
     }
   };
 
-  const handleEditEntry = (index) => {
-    setEntry(entries[index].content);
-    setDate(entries[index].date);
-    setEditingIndex(index); // Lưu chỉ mục mục đang chỉnh sửa
+  const handleDeleteEntry = (index) => {
+    const entryId = entries[index].id;
+    axios
+      .delete(`${baseURL}${entryId}/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+      .then(() => {
+        setEntries(entries.filter((_, i) => i !== index));
+      })
+      .catch((error) => {
+        console.error("Failed to delete diary entry", error);
+        alert("Failed to delete diary entry.");
+      });
   };
 
-  const handleDeleteEntry = (index) => {
-    const updatedEntries = entries.filter((_, i) => i !== index);
-    setEntries(updatedEntries);
+  const resetForm = () => {
+    setEntry("");
+    setDate("");
+    setEditingIndex(null);
   };
 
   return (
     <div className="diary-container">
       <h1>Nhật Ký Cá Nhân</h1>
-
       <div className="diary-inputs">
         <textarea
           value={entry}
@@ -69,13 +114,12 @@ const DiaryEntry = () => {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          max={today} // Giới hạn nhập ngày đến hôm nay
+          max={today}
         />
         <button onClick={handleAddOrEditEntry}>
-          {editingIndex !== null ? "Lưu" : "Thêm Nhật Ký"} {/* Đổi tên nút */}
+          {editingIndex !== null ? "Lưu" : "Thêm Nhật Ký"}
         </button>
       </div>
-
       <div className="diary-entries">
         {entries.map((entry, index) => (
           <div key={index} className="diary-card">
@@ -84,8 +128,12 @@ const DiaryEntry = () => {
                 {new Date(entry.date).toLocaleDateString()}
               </div>
               <div className="diary-actions">
-                <FaEdit className="edit-icon" onClick={() => handleEditEntry(index)} />
-                <FaTrash className="delete-icon" onClick={() => handleDeleteEntry(index)} />
+                <FaEdit onClick={() => {
+                  setEntry(entry.content);
+                  setDate(entry.date);
+                  setEditingIndex(index);
+                }} />
+                <FaTrash onClick={() => handleDeleteEntry(index)} />
               </div>
             </div>
             <div className="diary-content">{entry.content}</div>
