@@ -1,0 +1,42 @@
+  :root {
+    --background: #cec8ed;
+    --navbar-width: 256px;
+    --navbar-width-min: 80px;
+    --navbar-dark-primary: #18283b;
+    --navbar-dark-secondary: #2c3e50;
+    --navbar-light-primary: #f5f6fa;
+    --navbar-light-secondary: #8392a5;
+}
+
+body {
+  background: var(--background);
+  background: linear-gradient(45deg, #f7c6e7, #a1c4fd, #c2e9fb);
+  background-size: 300% 300%;
+  animation: gradientAnimation 6s ease infinite; /* Animation chuyển động */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Thêm bóng mờ cho phần container */
+  font-family: Arial, sans-serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .wrapper { 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 100vh;
+    width: 100%;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #2980B9; /* Tone xanh da trời */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }

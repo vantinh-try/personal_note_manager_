@@ -1,0 +1,162 @@
+/* Task Content */
+#task-content {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(45deg, #D5E8F1, #EBF5FB, #D5E8F1); /* Gradient xanh nhạt giống nhật ký */
+  background-size: 300% 300%;
+  animation: gradientAnimation 8s ease infinite; /* Animation chuyển động nhẹ nhàng */
+  flex: 1;
+  height: calc(100% - 2vw);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  overflow-y: auto;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  position: relative;
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Hiệu ứng chuyển động cho gradient */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Thay đổi màu sắc phần header task */
+.task-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2980B9; /* Màu xanh da trời giống nhật ký */
+}
+
+/* Form task */
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+  background: #ffffff; /* Nền trắng */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"],
+textarea,
+input[type="date"] {
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333333; /* Màu chữ xanh da trời */
+  border: transparent;
+  outline: #2980B9;
+}
+
+textarea {
+  width: auto; /* Adjust width to 100% to allow full use of available space */
+  resize: none;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap; /* Preserves newlines and spaces */
+}
+
+input[type="date"] {
+  width: 150px;
+  padding: 8px;
+  border: 2px solid #A9CCE3;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #2980B9;
+  background-color: #D5E8F1; /* Nền xanh nhạt */
+  margin-right: 10px;
+}
+
+button {
+  display: inline-block;
+  padding: 9px 12px;
+  background-color: #2980B9; /* Xanh da trời */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #1F6E8C; /* Màu xanh đậm khi hover */
+}
+
+/* Task list */
+.task-list,
+.completed-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.task-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #EBF5FB; /* Nền xanh sáng cho card */
+  border: 1px solid #A9CCE3; /* Màu xanh da trời nhạt cho viền */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* For time and status in task card */
+.task-meta-container {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Adjust gap as needed */
+  margin-bottom: 10px;
+}
+
+/* Task card header */
+.task-card h3 {
+  margin: 0;
+  text-transform: uppercase;
+  margin-top: 10px;
+  color: #2980B9; /* Màu xanh da trời */
+}
+
+.task-card .task-description {
+  margin: 5px 0;
+  overflow-wrap: break-word; /* Ensures text wraps */
+  word-wrap: break-word; /* For older browsers */
+  white-space: pre-wrap; /* Preserves newlines and spaces */
+}
+
+/* Completed task styling */
+.task-card.completed {
+  background-color: #D5E8F1; /* Nền xanh nhạt cho task hoàn thành */
+}
+
+/* Delete button */
+.delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #ff4d4d;
+}
+
+.delete-button:hover {
+  color: #ff0000;
+}

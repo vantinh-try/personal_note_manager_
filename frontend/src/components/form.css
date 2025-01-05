@@ -1,0 +1,88 @@
+
+.form-container {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin-bottom: 20px; 
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+.form-group input:focus {
+  border-color: #4321eb;
+  outline: none;
+  box-shadow: 0 0 5px rgba(67, 33, 235, 0.3);
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(45deg, #4321eb, #805ef7);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+  background: linear-gradient(45deg, #805ef7, #4321eb);
+}
+
+.toggle-link {
+  text-align: center;
+  color: #4321eb;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-top: 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.toggle-link:hover {
+  color: #805ef7;
+  text-decoration: underline;
+}
+
+/* Tạo một khoảng cách hoặc không ảnh hưởng đến trang Home
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+} */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.field-error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}

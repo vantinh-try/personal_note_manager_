@@ -1,0 +1,138 @@
+/* Container chứa ghi chú */
+.note-container {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(45deg, #D5E8F1, #EBF5FB, #D5E8F1); /* Gradient xanh nhạt giống nhật ký */
+  background-size: 300% 300%;
+  animation: gradientAnimation 8s ease infinite; /* Animation chuyển động nhẹ nhàng */
+  flex: 1;
+  height: calc(100% - 2vw);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  overflow-y: auto;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  position: relative;
+  margin: auto;
+}
+
+/* Tiêu đề của ghi chú */
+.note-header {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #2980B9; /* Màu xanh da trời giống nhật ký */
+}
+
+/* Ô nhập tiêu đề ghi chú */
+.note-title {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 2px solid #A9CCE3; /* Màu xanh da trời nhạt cho viền */
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+/* Placeholder cho tiêu đề ghi chú */
+.note-title::placeholder {
+  color: rgb(73, 70, 70);
+  font-size: 16px;
+  font-style: italic;
+}
+
+/* Hiển thị tiêu đề ghi chú */
+.note-title-display {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #2980B9; /* Màu xanh da trời */
+}
+
+/* Ô nhập nội dung ghi chú */
+.note-input {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #A9CCE3; /* Màu xanh da trời nhạt cho viền */
+  font-size: 16px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  white-space: pre-wrap; /* Giữ nguyên các dòng khi xuống hàng */
+  word-wrap: break-word; /* Tự động ngắt từ khi quá dài */
+  overflow-wrap: break-word; /* Đảm bảo từ không bị tràn ra ngoài */
+}
+
+/* Nút thêm ghi chú */
+.add-note-button {
+  background-color: #2980B9; /* Xanh da trời giống task */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.add-note-button:hover {
+  background-color: #1F6E8C; /* Màu xanh đậm khi hover */
+}
+
+/* Danh sách ghi chú - sử dụng Grid */
+.notes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Tự động điều chỉnh số cột */
+  gap: 20px; /* Khoảng cách giữa các card */
+  margin-top: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Các card */
+.note-card {
+  background-color: #EBF5FB; /* Nền xanh sáng giống card task */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  break-inside: avoid;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap; /* Giữ nguyên các dòng khi hiển thị trong card */
+}
+
+/* Footer của card ghi chú */
+.note-card .note-footer {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-card .note-footer .note-time {
+  flex-grow: 1;
+}
+
+.note-card .note-footer .note-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.note-card .note-footer .note-icons i {
+  cursor: pointer;
+}
+
+.note-card .note-footer .note-icons i:hover {
+  color: #2980B9; /* Xanh da trời khi hover */
+}
