@@ -48,7 +48,7 @@ const LoginForm = ({ onToggle, onLoginSuccess }) => {
   
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Đăng kí</h1>
+      <h1>Đăng nhập</h1>
       {/* Hiển thị thông báo lỗi nếu có */}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div className="form-group">
@@ -73,12 +73,12 @@ const LoginForm = ({ onToggle, onLoginSuccess }) => {
       </div>
       {/* Nút gửi yêu cầu */}
       <button type="submit" className="btn" disabled={loading}>
-        {loading ? "Logging in..." : "Login"}
+        {loading ? "Logging in..." : "Đăng nhập"}
       </button>
       <p>
-        Don't have an account?{" "}
+        Bạn chưa có tài khoản?{" "}
         <span className="toggle-link" onClick={handleRegisterClick}>
-          Register here
+          Đăng ký tại đây
         </span>
       </p>
     </form>

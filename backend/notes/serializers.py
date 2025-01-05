@@ -4,5 +4,6 @@ from .models import Note
 class NoteSerializer(serializers.ModelSerializer):
   class Meta:
     model = Note
-    fields = '__all__'
+    fields = ['id', 'title', 'content', 'reminders', 'created_at', 'updated_at']
+    read_only_fields = ['id', 'created_at', 'updated_at']
     

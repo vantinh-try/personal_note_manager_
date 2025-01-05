@@ -18,7 +18,7 @@ const SideBar = () => {
       <input type="checkbox" id="nav-toggle" />
       <div id="nav-header">
         <a id="nav-title" href="" target="_blank" rel="noopener noreferrer">
-          <i className="fas fa-cogs"></i> My App
+          <i className="fas fa-cogs"></i> App
         </a>
         <label htmlFor="nav-toggle">
           <span id="nav-toggle-burger"></span>

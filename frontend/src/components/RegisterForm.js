@@ -107,7 +107,7 @@ const RegisterForm = ({ onToggle }) => {
         />
       </div>
       <button type="submit" className="btn" disabled={loading}>
-        {loading ? "Registering..." : "Đăng kí"}
+        {loading ? "Registering..." : "Đăng ký"}
       </button>
       <p>
         Bạn đã có tài khoản?{" "}

@@ -5,30 +5,35 @@ import "./Note.css";
 const Note = () => {
   const [notes, setNotes] = useState([]);
   const [input, setInput] = useState("");
-  const [title, setTitle] = useState(""); // Thêm state cho tiêu đề
-  const [editingIndex, setEditingIndex] = useState(null); // Thêm state để theo dõi ghi chú đang được chỉnh sửa
+  const [title, setTitle] = useState(""); // State for title
+  const [editingIndex, setEditingIndex] = useState(null); // Track the note being edited
 
   const baseURL = "http://127.0.0.1:8000/api/notes/";
 
   useEffect(() => {
     axios
-    .get(baseURL, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    })
-    .then((response) => {
-      setNotes(response.data);
-    })
-    .catch((error) => {
-      console.error("Failed", error);
-    });
+      .get(baseURL, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        setNotes(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch notes", error);
+        alert("Could not fetch notes. Please try again.");
+      });
   }, []);
 
   const handleAddNote = () => {
-    if (input.trim() && title.trim()) {
-      const newNote = { title, content: input };
-      axios
+    if (!title.trim() || !input.trim()) {
+      alert("Title and content are required!");
+      return;
+    }
+  
+    const newNote = { title, content: input };
+    axios
       .post(baseURL, newNote, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -40,15 +45,18 @@ const Note = () => {
         setTitle("");
       })
       .catch((error) => {
-        console.error("Failed", error);
+        const errorMessage = error.response?.data?.detail || "Unknown error occurred.";
+        console.error("Failed to add note", error);
+        alert(`Failed to add note: ${errorMessage}`);
       });
-    }
   };
+  
+  
 
   const handleEditNote = (index) => {
-    setEditingIndex(index); // Chỉ ra ghi chú đang được chỉnh sửa
-    setInput(notes[index].content); // Điền nội dung vào ô nhập
-    setTitle(notes[index].title); // Điền tiêu đề vào ô nhập
+    setEditingIndex(index); // Set the note being edited
+    setInput(notes[index].content); // Populate input with note content
+    setTitle(notes[index].title); // Populate title input
   };
 
   const handleSaveNote = () => {
@@ -57,57 +65,58 @@ const Note = () => {
       const noteId = notes[editingIndex].id;
 
       axios
-      .put(`${baseURL}${noteId}/`, updatedNote, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      })
-      .then((response) => {
-        const updatedNotes = [...notes];
-        updatedNotes[editingIndex] = response.data;
-        setNotes(updatedNotes);
-        setInput("");
-        setTitle("");
-        setEditingIndex(null);
-      })
-      .catch((error) => {
-        console.error("Failed", error);
-      });
+        .put(`${baseURL}${noteId}/`, updatedNote, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        })
+        .then((response) => {
+          const updatedNotes = [...notes];
+          updatedNotes[editingIndex] = response.data;
+          setNotes(updatedNotes);
+          setInput("");
+          setTitle("");
+          setEditingIndex(null);
+        })
+        .catch((error) => {
+          console.error("Failed to save note", error);
+          alert("Failed to save note: " + (error.response?.data.detail || error.message));
+        });
     }
   };
 
   const handleDeleteNote = (index) => {
     const noteId = notes[index].id;
     axios
-    .delete(`${baseURL}${noteId}/`, {
+      .delete(`${baseURL}${noteId}/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-    })
-    .then(() => {
-      setNotes(notes.filter((_, i) => i !== index));
-    })
-    .catch((error) => {
-      console.error("Failed", error);
-      
-    });
+      })
+      .then(() => {
+        setNotes(notes.filter((_, i) => i !== index));
+      })
+      .catch((error) => {
+        console.error("Failed to delete note", error);
+        alert("Failed to delete note: " + (error.response?.data.detail || error.message));
+      });
   };
 
   return (
     <div className="note-container">
-      <h1>Ghi chú cá nhân</h1>
+      <h1>Personal Notes</h1>
       <input
         type="text"
         className="note-title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Nhập tiêu đề..."
+        placeholder="Enter title..."
       />
       <textarea
         className="note-input"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Nhập ghi chú..."
+        placeholder="Enter note..."
       />
       <button
         className="add-note-button"
@@ -118,18 +127,18 @@ const Note = () => {
       <div className="notes-list">
         {notes.map((note, index) => (
           <div className="note-card" key={index}>
-            <div className="note-title-display">{note.title}</div> {/* Hiển thị tiêu đề */}
+            <div className="note-title-display">{note.title}</div>
             <div className="note-content">{note.content}</div>
             <div className="note-footer">
               <span className="note-time">{new Date(note.created_at).toLocaleString()}</span>
               <div className="note-icons">
                 <i
                   className="fas fa-edit"
-                  onClick={() => handleEditNote(index)} // Bấm vào chỉnh sửa
+                  onClick={() => handleEditNote(index)}
                 />
                 <i
                   className="fas fa-trash-alt"
-                  onClick={() => handleDeleteNote(index)} // Xóa ghi chú
+                  onClick={() => handleDeleteNote(index)}
                 />
               </div>
             </div>

@@ -16,23 +16,19 @@ const Setting = () => {
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
-  // Hàm logout
   const handleLogout = useCallback(() => {
-    // Xóa token khỏi localStorage
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-
-    // Đặt lại trạng thái người dùng
     setUserName("");
     setEmail("");
     setAvatar(null);
-
-    // Chuyển hướng ngay về login
-    navigate("/login");
-
-    // Hiển thị thông báo đăng xuất thành công
-    toast.success("Đăng xuất thành công!", { autoClose: 3000 });
-  }, [navigate]);
+    toast.success("Đăng xuất thành công!", {
+      autoClose: 3000,
+      onClose: () => {
+        window.location.href = "/login"; // Điều hướng trực tiếp thay vì sử dụng navigate
+      },
+    });
+  }, []);
 
   // Lấy thông tin người dùng khi tải trang
   useEffect(() => {
