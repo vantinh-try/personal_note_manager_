@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from tasks.models import Task
@@ -11,6 +11,8 @@ from notes.models import Note
 from diary.models import DiaryEntry
 from datetime import datetime, timedelta
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.parsers import MultiPartParser
+from .models import CustomUser
 
 User = get_user_model()
 
@@ -160,3 +162,15 @@ class VerifyTokenView(APIView):
         return Response({"message": "Token is valid"}, status=status.HTTP_200_OK)
 
 
+class AvatarUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]  #* Upload file supporter
+    
+    def put(self, request):
+        user = request.user
+        serializer = ProfileSerializer(user, data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+    

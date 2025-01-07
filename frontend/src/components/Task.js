@@ -17,7 +17,7 @@ const Task = () => {
         },
       })
       .then((response) => {
-        setTasks(Array.isArray(response.data) ? response.data : []);
+        setTasks(response.data);
       })
       .catch((error) => {
         console.error("Failed to fetch tasks:", error);
@@ -31,9 +31,8 @@ const Task = () => {
       return;
     }
 
-    const newTask = { title, description };
     axios
-      .post(baseURL, newTask, {
+      .post(baseURL, { title, description }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -43,16 +42,15 @@ const Task = () => {
         resetForm();
       })
       .catch((error) => {
-        console.error("Failed to add task:", error.response || error.message);
+        console.error("Failed to add task:", error);
         alert("Failed to add task.");
       });
   };
 
   const handleSaveTask = () => {
     const taskId = tasks[editingIndex].id;
-    const updatedTask = { title, description };
     axios
-      .put(`${baseURL}${taskId}/`, updatedTask, {
+      .put(`${baseURL}${taskId}/`, { title, description }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -64,8 +62,25 @@ const Task = () => {
         resetForm();
       })
       .catch((error) => {
-        console.error("Failed to update task:", error.response || error.message);
+        console.error("Failed to update task:", error);
         alert("Failed to update task.");
+      });
+  };
+
+  const handleDeleteTask = (index) => {
+    const taskId = tasks[index].id;
+    axios
+      .delete(`${baseURL}${taskId}/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+      .then(() => {
+        setTasks(tasks.filter((_, i) => i !== index));
+      })
+      .catch((error) => {
+        console.error("Failed to delete task:", error);
+        alert("Failed to delete task.");
       });
   };
 
@@ -99,30 +114,16 @@ const Task = () => {
           <div key={task.id} className="task-card">
             <h3>{task.title}</h3>
             <p>{task.description}</p>
-            <p>Created At: {new Date(task.created_at).toLocaleString()}</p>
-            <button onClick={() => {
-              setEditingIndex(index);
-              setTitle(task.title);
-              setDescription(task.description);
-            }}>
+            <button
+              onClick={() => {
+                setEditingIndex(index);
+                setTitle(task.title);
+                setDescription(task.description);
+              }}
+            >
               Edit
             </button>
-            <button onClick={() => {
-              axios
-                .delete(`${baseURL}${task.id}/`, {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                  },
-                })
-                .then(() => {
-                  setTasks(tasks.filter((_, i) => i !== index));
-                })
-                .catch((error) => {
-                  console.error("Failed to delete task:", error.response || error.message);
-                });
-            }}>
-              Delete
-            </button>
+            <button onClick={() => handleDeleteTask(index)}>Delete</button>
           </div>
         ))}
       </div>
